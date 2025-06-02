@@ -6,11 +6,11 @@ on:
       repository:
         description: "Repository URL"
         required: true
-        default: "https://github.com/Vita3K/Vita3K"
+        default: "Vita3K/Vita3K"
       branch:
         description: "Branch name"
         required: true
-        default: "main"
+        default: "master"
 
 jobs:
   analyze:
@@ -65,12 +65,13 @@ jobs:
 
     - name: Configure project with CMake
       run: |
+        cd src
         cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --preset linux-ninja-clang
         cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --build build/linux-ninja-clang --config Release
 
     - name: Run PVS-Studio analysis
       run: |
-        cd build/linux-ninja-clang
+        cd src/build/linux-ninja-clang
         pvs-studio-analyzer analyze \
           --compilation-database compile_commands.json \
           --output-file pvs.log \
