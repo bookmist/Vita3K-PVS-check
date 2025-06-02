@@ -1,0 +1,1 @@
+It's a repo for tests PVS-studio in github actions
