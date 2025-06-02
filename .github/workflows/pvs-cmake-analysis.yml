@@ -69,7 +69,7 @@ jobs:
       run: |
         cd src
         cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --preset linux-ninja-clang
-        cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --build build/linux-ninja-clang --config Release
+        cmake --build build/linux-ninja-clang 
 
     - name: Run PVS-Studio analysis
       run: |
