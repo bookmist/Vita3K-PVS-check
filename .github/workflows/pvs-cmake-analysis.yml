@@ -37,6 +37,8 @@ jobs:
         repository: ${{ github.event.inputs.repository }}
         ref: ${{ github.event.inputs.branch }}
         path: src
+        fetch-depth: 0
+        submodules: recursive
 
     - name: Set up build environment (ubuntu-22.04)
       run: |
