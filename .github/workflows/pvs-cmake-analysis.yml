@@ -25,11 +25,16 @@ jobs:
         sudo apt-get install -y pvs-studio
 
     - name: Configure license
+      continue-on-error: true
       run: |
         pvs-studio-analyzer credentials $PVS_KEY $PVS_USERNAME
       env:
         PVS_USERNAME: ${{ secrets.PVS_USERNAME }}
         PVS_KEY: ${{ secrets.PVS_KEY }}
+
+    - name: Configure trial license
+      run: |
+        pvs-studio-analyzer credentials PVS-Studio Free FREE-FREE-FREE-FREE
 
     - name: Checkout repository
       uses: actions/checkout@v4
