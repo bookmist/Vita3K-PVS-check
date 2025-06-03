@@ -73,7 +73,7 @@ jobs:
     - name: Run PVS-Studio analysis
       run: |
         cd src
-        pvs-studio-analyzer analyze -f build/compile_commands.json -j --disableLicenseExpirationCheck
+        pvs-studio-analyzer analyze -f build/linux-ninja-clang/compile_commands.json -j --disableLicenseExpirationCheck
 
     - name: Convert report
       run: |
