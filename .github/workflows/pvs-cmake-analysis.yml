@@ -72,16 +72,16 @@ jobs:
 
     - name: Run PVS-Studio analysis
       run: |
-        pvs-studio-analyzer analyze \
-          --compilation-database build/compile_commands.json \
-          --output-file pvs.log \
-          -j $(nproc) \
-          --disableLicenseExpirationCheck
+        cd src
+        pvs-studio-analyzer analyze -f build/compile_commands.json -j --disableLicenseExpirationCheck
 
-        plog-converter -a GA:1,2 -t html -o report.html pvs.log
+    - name: Convert report
+      run: |
+        cd src
+        plog-converter -a GA:1,2 -t html -o report.html PVS-Studio.log
 
     - name: Upload PVS-Studio report
       uses: actions/upload-artifact@v4
       with:
         name: PVS-Report
-        path: build/linux-ninja-clang/report.html
+        path: report.html
