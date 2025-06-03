@@ -26,7 +26,7 @@ jobs:
 
     - name: Configure license
       run: |
-        pvs-studio-analyzer credentials -o $PVS_KEY $PVS_USERNAME
+        pvs-studio-analyzer credentials $PVS_KEY $PVS_USERNAME
       env:
         PVS_USERNAME: ${{ secrets.PVS_USERNAME }}
         PVS_KEY: ${{ secrets.PVS_KEY }}
@@ -73,7 +73,7 @@ jobs:
     - name: Run PVS-Studio analysis
       run: |
         cd src
-        pvs-studio-analyzer analyze -f build/linux-ninja-clang/compile_commands.json -j --disableLicenseExpirationCheck
+        pvs-studio-analyzer analyze -o PVS-Studio.log -f build/linux-ninja-clang/compile_commands.json -j -e /external/ -e /_deps/ --disableLicenseExpirationCheck
 
     - name: Convert report
       run: |
