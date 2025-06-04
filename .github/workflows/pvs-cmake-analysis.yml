@@ -97,5 +97,5 @@ jobs:
     - name: Upload PVS-Studio suppress
       uses: actions/upload-artifact@v4
       with:
-        name: PVS-Report
+        name: PVS-Suppress
         path: src/suppress_file.suppress.json
