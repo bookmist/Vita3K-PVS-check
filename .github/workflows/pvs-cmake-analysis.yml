@@ -77,16 +77,16 @@ jobs:
         cd src
         pvs-studio-analyzer analyze -o PVS-Studio.log -f build/linux-ninja-clang/compile_commands.json --threads 4 -s ../Settings.xml --exclude-path /external/ --exclude-path /_deps/ --sourcetree-root "$PWD"
 
-    - name: Run PVS-Studio suppression
+    - name: Run PVS-Studio suppress
       continue-on-error: true
       run: |
         cd src
-        pvs-studio-analyzer suppression -o PVS-Studio.log -f build/linux-ninja-clang/compile_commands.json -j -u global.suppress --exclude-path /external/ --exclude-path /_deps/ --sourcetree-root "$PWD"
+        pvs-studio-analyzer suppress -o PVS-Studio.log -f build/linux-ninja-clang/compile_commands.json -j -u global.suppress --exclude-path /external/ --exclude-path /_deps/ --sourcetree-root "$PWD"
 
     - name: Convert report
       run: |
         cd src
-        plog-converter -a GA:1,2 -t html -o report.html PVS-Studio.log
+        plog-converter -a GA:1,2 -t html -o report.html -r "/Vita3K/" -d V1042 PVS-Studio.log
 
     - name: Upload PVS-Studio report
       uses: actions/upload-artifact@v4
