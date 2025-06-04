@@ -75,7 +75,13 @@ jobs:
       continue-on-error: true
       run: |
         cd src
-        pvs-studio-analyzer analyze -o PVS-Studio.log -f build/linux-ninja-clang/compile_commands.json -j -e */external/* -e */_deps/* --SourceTreeRoot "$PWD" --suppressAll AnalyzeAndSuppress -u global.suppress -s ../Settings.xml
+        pvs-studio-analyzer analyze -o PVS-Studio.log -f build/linux-ninja-clang/compile_commands.json --threads 4 -s ../Settings.xml --exclude-path /external/ --exclude-path /_deps/ --sourcetree-root "$PWD"
+
+    - name: Run PVS-Studio suppression
+      continue-on-error: true
+      run: |
+        cd src
+        pvs-studio-analyzer suppression -o PVS-Studio.log -f build/linux-ninja-clang/compile_commands.json -j -u global.suppress --exclude-path /external/ --exclude-path /_deps/ --sourcetree-root "$PWD"
 
     - name: Convert report
       run: |
