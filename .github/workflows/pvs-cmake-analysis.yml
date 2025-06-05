@@ -75,7 +75,7 @@ jobs:
       continue-on-error: true
       run: |
         cd src
-        pvs-studio-analyzer analyze -o PVS-Studio.log -f build/linux-ninja-clang/compile_commands.json --threads 4 -s ../Settings.xml --exclude-path /external/ --exclude-path /_deps/ 
+        pvs-studio-analyzer analyze -o PVS-Studio.log -f build/linux-ninja-clang/compile_commands.json --threads 2 --analysis-paths skip-analysis=/external/ --analysis-paths skip-analysis=/_deps/ 
 
     - name: Run PVS-Studio suppress
       continue-on-error: true
