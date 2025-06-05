@@ -41,6 +41,11 @@ jobs:
         fetch-depth: 0
         submodules: recursive
 
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
     - name: Set up build environment (ubuntu-22.04)
       run: |
           sudo add-apt-repository -y ppa:mhier/libboost-latest
@@ -71,34 +76,43 @@ jobs:
         cd src
         cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --preset linux-ninja-clang
 
-#    - name: Run PVS-Studio analysis
-#      continue-on-error: true
-#      run: |
-#        cd src
-#        pvs-studio-analyzer analyze -o PVS-Studio.log -f build/linux-ninja-clang/compile_commands.json --threads 4 --analysis-paths skip-analysis=/external/ --analysis-paths skip-analysis=/_deps/ 
+    - name: Filter compile_commands
+      run: node filter.js src/build/linux-ninja-clang/compile_commands.json src/build/linux-ninja-clang/compile_commands_filtered.json
 
-#    - name: Run PVS-Studio suppress
-#      continue-on-error: true
-#      run: |
-#        cd src
-#        pvs-studio-analyzer suppress -o suppress_file.suppress.json PVS-Studio.log
+    - name: Run PVS-Studio analysis
+      continue-on-error: true
+      run: |
+        cd src
+        node pvs-studio-analyzer analyze -o PVS-Studio.log -f build/linux-ninja-clang/compile_commands_filtered.json --threads 4 --analysis-paths skip-analysis=/external/ --analysis-paths skip-analysis=/_deps/ 
 
-#    - name: Convert report
-#      run: |
-#        cd src
-#        plog-converter -a GA:1,2 -t html -o report.html -r "/Vita3K/" -d V1042 --excludePaths */external/* --excludePaths */_deps/* PVS-Studio.log
+    - name: Run PVS-Studio analysis
+      continue-on-error: true
+      run: |
+        cd src
+        pvs-studio-analyzer analyze -o PVS-Studio.log -f build/linux-ninja-clang/compile_commands.json --threads 4  --intermodular
 
-#    - name: Upload PVS-Studio report
-#      uses: actions/upload-artifact@v4
-#      with:
-#        name: PVS-Report
-#        path: src/report.html
+    - name: Run PVS-Studio suppress
+      continue-on-error: true
+      run: |
+        cd src
+        pvs-studio-analyzer suppress -o suppress_file.suppress.json PVS-Studio.log
 
-#    - name: Upload PVS-Studio suppress
-#      uses: actions/upload-artifact@v4
-#      with:
-#        name: PVS-Suppress
-#        path: src/suppress_file.suppress.json
+    - name: Convert report
+      run: |
+        cd src
+        plog-converter -a GA:1,2 -t html -o report.html -r "/Vita3K/" -d V1042 --excludePaths */external/* --excludePaths */_deps/* PVS-Studio.log
+
+    - name: Upload PVS-Studio report
+      uses: actions/upload-artifact@v4
+      with:
+        name: PVS-Report
+        path: src/report.html
+
+    - name: Upload PVS-Studio suppress
+      uses: actions/upload-artifact@v4
+      with:
+        name: PVS-Suppress
+        path: src/suppress_file.suppress.json
 
     - name: Upload compile_commands.json
       uses: actions/upload-artifact@v4
