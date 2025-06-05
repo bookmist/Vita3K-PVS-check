@@ -32,12 +32,18 @@ jobs:
         PVS_USERNAME: ${{ secrets.PVS_USERNAME }}
         PVS_KEY: ${{ secrets.PVS_KEY }}
 
-    - name: Checkout repository
+    - name: Checkout Vita repository
       uses: actions/checkout@v4
       with:
         repository: ${{ github.event.inputs.repository }}
         ref: ${{ github.event.inputs.branch }}
         path: src
+        fetch-depth: 0
+        submodules: recursive
+
+    - name: Checkout main repository
+      uses: actions/checkout@v4
+      with:
         fetch-depth: 0
         submodules: recursive
 
