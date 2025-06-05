@@ -32,18 +32,18 @@ jobs:
         PVS_USERNAME: ${{ secrets.PVS_USERNAME }}
         PVS_KEY: ${{ secrets.PVS_KEY }}
 
+    - name: Checkout main repository
+      uses: actions/checkout@v4
+      with:
+        path: scripts
+        fetch-depth: 0
+
     - name: Checkout Vita repository
       uses: actions/checkout@v4
       with:
         repository: ${{ github.event.inputs.repository }}
         ref: ${{ github.event.inputs.branch }}
         path: src
-        fetch-depth: 0
-        submodules: recursive
-
-    - name: Checkout main repository
-      uses: actions/checkout@v4
-      with:
         fetch-depth: 0
         submodules: recursive
 
@@ -83,7 +83,7 @@ jobs:
         cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --preset linux-ninja-clang
 
     - name: Filter compile_commands
-      run: node filter.js src/build/linux-ninja-clang/compile_commands.json src/build/linux-ninja-clang/compile_commands_filtered.json
+      run: node scripts/filter.js src/build/linux-ninja-clang/compile_commands.json src/build/linux-ninja-clang/compile_commands_filtered.json
 
     - name: Run PVS-Studio analysis
       continue-on-error: true
