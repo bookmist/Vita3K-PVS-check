@@ -33,12 +33,6 @@ runs:
       PVS_USERNAME: ${{ secrets.PVS_USERNAME }}
       PVS_KEY: ${{ secrets.PVS_KEY }}
 
-  - name: Checkout main repository
-    uses: actions/checkout@v4
-    with:
-      path: scripts
-      fetch-depth: 0
-
   - name: Checkout Vita repository
     uses: actions/checkout@v4
     with:

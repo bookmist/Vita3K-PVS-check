@@ -8,6 +8,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout main repository
+      uses: actions/checkout@v4
+
     - name: Prepare repo
       uses: ./.github/actions/pvs-cmake-analysis-common.yml
       with:
