@@ -12,7 +12,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Prepare repo
-      uses: ./.github/actions/pvs-cmake-analysis-common.yml
+      uses: ./.github/actions/pvs-cmake-analysis-common
       with:
         repository: "Vita3K/Vita3K"
         branch: "master"
