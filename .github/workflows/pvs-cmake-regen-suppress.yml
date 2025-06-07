@@ -1,0 +1,32 @@
+name: PVS-Studio CMake Analysis
+
+on:
+  workflow_dispatch:
+
+jobs:
+  call-workflow-passing-data:
+    uses: ./.github/workflows/pvs-cmake-analysis-common.yml@master
+    with:
+      repository: "Vita3K/Vita3K"
+      branch: "master"
+      repo_directory: "src"
+  analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Run PVS-Studio analysis
+      run: |
+        cd src
+        pvs-studio-analyzer analyze -o PVS-Studio.log -f build/linux-ninja-clang/compile_commands.json --threads 4  --intermodular --analysis-paths skip-analysis=/external/ --analysis-paths skip-analysis=/_deps/ 
+
+    - name: Generate PVS-Studio suppress file
+      continue-on-error: true
+      run: |
+        pvs-studio-analyzer suppress -o suppress_file.suppress.json src/PVS-Studio.log
+
+    - name: Commit suppress file
+      uses: EndBug/add-and-commit@v9
+      with:
+        default_author: github_actions
+        message: "Suppress file update"
+        add: 'suppress_file.suppress.json'
