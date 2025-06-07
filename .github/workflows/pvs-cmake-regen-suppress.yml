@@ -17,6 +17,8 @@ jobs:
         repository: "Vita3K/Vita3K"
         branch: "master"
         repo_directory: "src"
+        PVS_USERNAME: ${{ secrets.PVS_USERNAME }}
+        PVS_KEY: ${{ secrets.PVS_KEY }}
 
     - name: Run PVS-Studio analysis
       run: |
