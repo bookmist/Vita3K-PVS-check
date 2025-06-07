@@ -4,16 +4,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  call-workflow-passing-data:
-    uses: ./.github/workflows/pvs-cmake-analysis-common.yml
-    with:
-      repository: "Vita3K/Vita3K"
-      branch: "master"
-      repo_directory: "src"
-  analyze:
+  make_suppress:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Prepare repo
+      uses: ./.github/actions/pvs-cmake-analysis-common.yml
+      with:
+        repository: "Vita3K/Vita3K"
+        branch: "master"
+        repo_directory: "src"
+
     - name: Run PVS-Studio analysis
       run: |
         cd src
