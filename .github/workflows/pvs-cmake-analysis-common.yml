@@ -1,4 +1,4 @@
-name: PVS-Studio CMake Analysis
+name: Common workflow for PVS-Studio CMake Analysis
 
 on:
   workflow_call:

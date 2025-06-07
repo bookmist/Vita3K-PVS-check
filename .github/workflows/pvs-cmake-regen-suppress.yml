@@ -1,11 +1,11 @@
-name: PVS-Studio CMake Analysis
+name: Generate suppress file
 
 on:
   workflow_dispatch:
 
 jobs:
   call-workflow-passing-data:
-    uses: ./.github/workflows/pvs-cmake-analysis-common.yml@master
+    uses: ./.github/workflows/pvs-cmake-analysis-common.yml
     with:
       repository: "Vita3K/Vita3K"
       branch: "master"
