@@ -23,7 +23,7 @@ jobs:
     - name: Run PVS-Studio analysis
       run: |
         cd src
-        pvs-studio-analyzer analyze -o PVS-Studio.log -f build/linux-ninja-clang/compile_commands.json --threads 4  --intermodular --analysis-paths skip-analysis=/external/ --analysis-paths skip-analysis=/_deps/ 
+        pvs-studio-analyzer analyze -o PVS-Studio.log -f build/linux-ninja-clang/compile_commands.json --threads 4  --intermodular --analysis-mode GA+OP --analysis-paths skip-analysis=/external/ --analysis-paths skip-analysis=/_deps/ 
 
     - name: Generate PVS-Studio suppress file
       continue-on-error: true
