@@ -1,0 +1,61 @@
+name: PVS-Studio CMake PR Analysis
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr-number:
+        description: "Pull request id in Vita3k main repo"
+        type: number
+      repository:
+        description: "Repository URL"
+        default: "Vita3K/Vita3K"
+      branch:
+        description: "Branch name"
+        default: "master"
+
+jobs:
+  analyze_pr:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout main repository
+      uses: actions/checkout@v4
+
+    - name: Get PR info
+      id: pr-info
+      run: |
+        PR_NUMBER=${{ github.event.inputs.pr-number }}
+        response=$(curl -s \
+          -H "Accept: application/vnd.github.v3+json" \
+          "https://api.github.com/repos/${{ github.event.inputs.repository }}/pulls/$PR_NUMBER")
+        
+        echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_OUTPUT
+        echo "BASE_REPO=$(echo "$response" | jq -r '.base.repo.full_name')" >> $GITHUB_OUTPUT
+        echo "BASE_BRANCH=$(echo "$response" | jq -r '.base.ref')" >> $GITHUB_OUTPUT
+        echo "HEAD_REPO=$(echo "$response" | jq -r '.head.repo.full_name')" >> $GITHUB_OUTPUT
+        echo "HEAD_BRANCH=$(echo "$response" | jq -r '.head.ref')" >> $GITHUB_OUTPUT
+
+    - name: Prepare repo
+      uses: ./.github/actions/pvs-cmake-analysis-common
+      with:
+        repository: ${{ steps.pr-info.outputs.HEAD_REPO }}
+        branch: ${{ steps.pr-info.outputs.HEAD_BRANCH }}
+        repo_directory: "src"
+        PVS_USERNAME: ${{ secrets.PVS_USERNAME }}
+        PVS_KEY: ${{ secrets.PVS_KEY }}
+
+    - name: Run PVS-Studio analysis
+      run: |
+        cd src
+        pvs-studio-analyzer analyze -o PVS-Studio.log -f build/linux-ninja-clang/compile_commands.json --threads 4 --intermodular --analysis-mode GA;OP --suppress-file ../suppress_file.suppress.json --analysis-paths skip-analysis=/external/ --analysis-paths skip-analysis=/_deps/ 
+
+    - name: Convert report
+      run: |
+        cd src
+        plog-converter -a GA:1,2;OP:1,2; -t html -o report.html -r "/Vita3K/" -d V1042 --excludePaths */external/* --excludePaths */_deps/* PVS-Studio.log
+
+    - name: Upload PVS-Studio report
+      uses: actions/upload-artifact@v4
+      with:
+        name: PVS-Report
+        path: src/report.html
