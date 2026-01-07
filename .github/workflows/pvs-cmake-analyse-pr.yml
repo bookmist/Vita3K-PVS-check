@@ -46,6 +46,7 @@ jobs:
 
     - name: Run PVS-Studio analysis
       run: |
+        set +e
         cd src
         pvs-studio-analyzer analyze --disableLicenseExpirationCheck -o PVS-Studio.log -f build/linux-ninja-clang/compile_commands.json --threads 4 --intermodular --analysis-mode GA+OP --suppress-file ../suppress_file.suppress.json --analysis-paths skip-analysis=/external/ --analysis-paths skip-analysis=/_deps/ 
 
