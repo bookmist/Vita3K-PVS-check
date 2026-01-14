@@ -33,13 +33,13 @@ jobs:
         PVS_KEY: ${{ secrets.PVS_KEY }}
 
     - name: Checkout main repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         path: scripts
         fetch-depth: 0
 
     - name: Checkout Vita repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         repository: ${{ github.event.inputs.repository }}
         ref: ${{ github.event.inputs.branch }}
@@ -48,7 +48,7 @@ jobs:
         submodules: recursive
 
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: '20'
 
@@ -109,19 +109,19 @@ jobs:
         plog-converter -a GA:1,2 -t html -o report.html -r "/Vita3K/" -d V1042 --excludePaths */external/* --excludePaths */_deps/* PVS-Studio.log
 
     - name: Upload PVS-Studio report
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: PVS-Report
         path: src/report.html
 
     - name: Upload PVS-Studio suppress
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: PVS-Suppress
         path: src/suppress_file.suppress.json
 
     - name: Upload compile_commands.json
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: PVS-Suppress
         path: src/build/linux-ninja-clang/compile_commands.json
