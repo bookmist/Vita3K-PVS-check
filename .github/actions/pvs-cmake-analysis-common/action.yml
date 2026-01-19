@@ -32,13 +32,10 @@ runs:
                                                                            
       # Add PVS-Studio GPG key                                             
       sudo mkdir -p /etc/apt/keyrings                                      
-      curl -fsSL https://files.viva64.com/etc/pubkey.txt | \               
-        sudo gpg --dearmor -o /etc/apt/keyrings/pvsstudio.gpg              
+      curl -fsSL https://files.viva64.com/etc/pubkey.txt | sudo gpg --dearmor -o /etc/apt/keyrings/pvsstudio.gpg              
                                                                            
       # Add PVS-Studio repository (correct source)                         
-      curl -fsSL https://files.viva64.com/etc/viva64.list | \              
-        sed 's|^deb |deb [signed-by=/etc/apt/keyrings/pvsstudio.gpg] |' | \
-        sudo tee /etc/apt/sources.list.d/viva64.list                       
+      curl -fsSL https://files.viva64.com/etc/viva64.list | sed 's|^deb |deb [signed-by=/etc/apt/keyrings/pvsstudio.gpg] |' | sudo tee /etc/apt/sources.list.d/viva64.list                       
                                                                            
       # Update and install                                                 
       sudo apt-get update                                                  
