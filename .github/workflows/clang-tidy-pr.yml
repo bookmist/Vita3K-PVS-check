@@ -20,7 +20,7 @@ on:
 
 defaults:
   run:
-    shell: bash -e
+    shell: bash
 
 jobs:
   clang-tidy:
