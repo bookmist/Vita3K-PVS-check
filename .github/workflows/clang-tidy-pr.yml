@@ -19,6 +19,9 @@ jobs:
     continue-on-error: true
 
     steps:
+      - name: Install prerequisites
+        run: sudo apt-get update && sudo apt-get install -y jq curl
+      
       - name: Fetch PR metadata
         id: pr
         run: >
@@ -27,13 +30,18 @@ jobs:
           -H "Accept: application/vnd.github+json"
           https://api.github.com/repos/${{ inputs.repo }}/pulls/${{ inputs.pr }}
           > pr.json
-
+      
       - name: Extract SHAs
         id: sha
         run: >
+          set -e &&
           echo "head=$(jq -r .head.sha pr.json)" >> $GITHUB_OUTPUT &&
           echo "base=$(jq -r .base.sha pr.json)" >> $GITHUB_OUTPUT
-
+      
+      - name: Validate SHAs
+        run: >
+          test -n "${{ steps.sha.outputs.head }}" &&
+          test -n "${{ steps.sha.outputs.base }}"
       - name: Checkout PR HEAD
         uses: actions/checkout@v4
         with:
